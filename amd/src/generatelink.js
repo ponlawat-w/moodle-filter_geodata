@@ -9,13 +9,13 @@ define(['jquery'], $ => {
     return undefined;
   };
 
-  const initiateGeodata = div => {
-    const $div = $(div);
-    if ($div.parent('textarea input').length) {
+  const initiateGeodata = element => {
+    const $element = $(element);
+    if ($element.closest('textarea input .editor_atto').length) {
       return;
     }
 
-    const format = getGeodataFormat($div);
+    const format = getGeodataFormat($element);
     if (!format) {
       return;
     }
@@ -23,7 +23,7 @@ define(['jquery'], $ => {
     const $geo = $('<geodata>')
       .attr('format', format)
       .css('display', 'none')
-      .html($div.html());
+      .html($element.html());
 
     const $a = $('<a>')
       .attr('href', 'javascript:void(0);')
@@ -33,12 +33,12 @@ define(['jquery'], $ => {
       .append(M.str.filter_geodata.viewinmap)
       .append($geo);
 
-    $div.replaceWith($a);
+    $element.replaceWith($a);
   };
 
-  return $geoDivs => {
-    if ($geoDivs.length) {
-      $geoDivs.each((idx, geoDiv) => initiateGeodata(geoDiv));
+  return $geos => {
+    if ($geos.length) {
+      $geos.each((idx, geo) => initiateGeodata(geo));
     }
   };
 });
