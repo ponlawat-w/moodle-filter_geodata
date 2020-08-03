@@ -2,17 +2,17 @@ define([
   'jquery',
   'core/modal_factory',
   'core/modal_events',
-  'filter_geodata/initleaflet'
+  'local_leaflet/core',
+  'local_leaflet/osmbasemap'
 ], (
   $,
   ModalFactory,
   ModalEvents,
-  initLeaflet
+  Leaflet,
+  OsmBaseMap
 ) => {
 
   let MAP = null;
-
-  initLeaflet();
 
   const mapModalHidden = (modal) => {
     if (MAP) {
@@ -37,15 +37,9 @@ define([
   };
 
   const mapRenderGeojson = data => {
-    const geojsonLayer = L.geoJSON(data);
+    const geojsonLayer = Leaflet.geoJSON(data);
     geojsonLayer.addTo(MAP);
     toBounds(geojsonLayer.getBounds());
-  };
-
-  const addBasemap = () => {
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(MAP);
   };
 
   const mapModalShown = () => {
@@ -54,8 +48,8 @@ define([
       return;
     }
 
-    MAP = L.map('filter-geodata-map');
-    addBasemap();
+    MAP = Leaflet.map('filter-geodata-map');
+    OsmBaseMap.addTo(MAP);
     if($geo.attr('format') === 'geojson') {
       mapRenderGeojson(JSON.parse($geo.html()));
     }
@@ -68,7 +62,7 @@ define([
   };
 
   return $target => {
-    if (!L) {
+    if (!typeof Leaflet === 'undefined') {
       console.error('Leaflet is not initialised!');
       return;
     }
