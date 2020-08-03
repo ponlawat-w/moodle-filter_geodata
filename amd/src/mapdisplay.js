@@ -42,6 +42,17 @@ define([
     toBounds(geojsonLayer.getBounds());
   };
 
+  const mapRenderPoint = data => {
+    const points = data.split(',').map(x => parseFloat(x.trim()));
+    if (points.length > 1) {
+      const marker = Leaflet.marker({
+        lat: points[0],
+        lng: points[1]
+      }).addTo(MAP);
+      MAP.setView(marker.getLatLng(), 15);
+    }
+  };
+
   const mapModalShown = () => {
     const $geo = $('#filter-geodata-modal geodata');
     if (!$geo.length) {
@@ -50,8 +61,10 @@ define([
 
     MAP = Leaflet.map('filter-geodata-map');
     OsmBaseMap.addTo(MAP);
-    if($geo.attr('format') === 'geojson') {
+    if ($geo.attr('format') === 'geojson') {
       mapRenderGeojson(JSON.parse($geo.html()));
+    } else if ($geo.attr('format') === 'point') {
+      mapRenderPoint($geo.html());
     }
   };
 

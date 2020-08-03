@@ -3,6 +3,8 @@ define(['jquery'], $ => {
   const getGeodataFormat = $div => {
     if ($div.hasClass('filter-geodata-geojson')) {
       return 'geojson';
+    } else if ($div.hasClass('filter-geodata-point')) {
+      return 'point';
     }
     return undefined;
   };
