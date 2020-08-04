@@ -1,21 +1,14 @@
-define(['jquery'], $ => {
-
-  const getGeodataFormat = $div => {
-    if ($div.hasClass('filter-geodata-geojson')) {
-      return 'geojson';
-    } else if ($div.hasClass('filter-geodata-point')) {
-      return 'point';
-    }
-    return undefined;
-  };
+define(['jquery', 'filter_geodata/getgeodataformat'], ($, GetGeodataFormat) => {
 
   const initiateGeodata = element => {
     const $element = $(element);
-    if ($element.closest('textarea input .editor_atto').length) {
+    if ($element.closest('textarea').length ||
+        $element.closest('input').length ||
+        $element.closest('.editor_atto').length) {
       return;
     }
 
-    const format = getGeodataFormat($element);
+    const format = GetGeodataFormat($element);
     if (!format) {
       return;
     }
